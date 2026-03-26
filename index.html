@@ -1,46 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>e-Hotels - Book a room today!</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-    crossorigin="anonymous"
-  />
-
-  <link
-   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-   rel="stylesheet"
-   />
-
-<!-- Fix bg colour and a bunch of stuff cuz it looks fugly rn -->
-   <body style="background-color:#FEFEFE;">
-    <nav class="navbar navbar-expand-md navbar-dark border-bottom sticky-top" style="background-color:#1c2e4a;">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/styles.css" />
+</head>
+<body style="background-color:#FEFEFE;">
+  <nav class="navbar navbar-expand-md navbar-dark border-bottom sticky-top" style="background-color:#1c2e4a;">
     <div class="container d-flex align-items-center gap-3">
       <a class="navbar-brand d-flex align-items-center gap-3 mb-0" href="#top" style="text-decoration:none;">
-        <img src="" alt="e-Hotels" style="height:60px;" class="img-fluid rounded"/>
         <div>
-          <div style="color: white;">e-Hotels</div>
+          <div style="color: white; font-weight:700; font-size:1.3rem;">e-Hotels</div>
           <div style="color: white;">Book a room today!</div>
         </div>
       </a>
-
       <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-      <!-- Took this from my SEG3125 Lab - Doesn't work yet-->
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav ms-auto gap-md-2">
-          <li class="nav-item"><a class="nav-link" href="#step-1" data-nav-step="1">Create/Manage Booking</a></li>>
-          <li class="nav-item"><a class="nav-link" href="#step-2" data-nav-step="2">Staff Portal</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sec-search">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sec-staff">Staff Portal</a></li>
+          <li class="nav-item"><a class="nav-link" href="#sec-views">Views</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-</head>
+  <main class="container my-4">
+
+    <section class="section" id="sec-search">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3"><i class="bi bi-search"></i> Search Rooms</h5>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+              <label class="form-label">Check-In</label>
+              <input type="date" class="form-control" id="s_start" onchange="searchRooms()">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Check-Out</label>
+              <input type="date" class="form-control" id="s_end" onchange="searchRooms()">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Capacity</label>
+              <select class="form-select" id="s_capacity" onchange="searchRooms()">
+                <option value="">Any</option>
+                <option value="single">Single</option>
+                <option value="double">Double</option>
+                <option value="triple">Triple</option>
+                <option value="quad">Quad</option>
+                <option value="suite">Suite</option>
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Area</label>
+              <select class="form-select" id="s_area" onchange="searchRooms()"><option value="">Any</option></select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Hotel Chain</label>
+              <select class="form-select" id="s_chain" onchange="searchRooms()"><option value="">Any</option></select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Min Stars</label>
+              <select class="form-select" id="s_category" onchange="searchRooms()"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Max Price $</label>
+              <input type="number" class="form-control" id="s_price" min="0" placeholder="No limit" onchange="searchRooms()">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Min Rooms in Hotel</label>
+              <input type="number" class="form-control" id="s_rooms" min="0" placeholder="Any" onchange="searchRooms()">
+            </div>
+            <div class="col-12">
+              <button class="btn btn-primary px-4" onclick="searchRooms()"><i class="bi bi-search"></i> Search</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="searchResults" class="row g-3"></div>
+    </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-4C7hPaQL+gW1GRMUYCvS0/lk+Bk7u5hkop0kQ4SCp1M4T+x+niIf6lMwiwQ9LT+B" crossorigin="anonymous"></script>
+  <script>
+    // Set minimum date to today for check-in and check-out
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('s_start').min = today;
+    document.getElementById('s_end').min = today;
+  </script>
+  <script src="scripts/main.js"></script>
+</body>
 </html>
