@@ -32,8 +32,7 @@
     </div>
   </nav>
 
-  <main class="container my-4">
-
+<!-- Main content -->
     <section class="section" id="sec-search">
       <div class="card shadow-sm mb-4">
         <div class="card-body">
@@ -86,7 +85,8 @@
       </div>
       <div id="searchResults" class="row g-3"></div>
     </section>
-    
+<!-- Staff section -->
+<!-- TODO: make it show DB contents. also allow CRUD operations-->
     <section class="section d-none" id="sec-staff">
       <h2 class="mb-4 border-bottom pb-2">Staff Portal</h2>
       
@@ -123,8 +123,37 @@
       </div>
     </section>
   </main>
+<!-- Views section -->
+ <section class="section d-none" id="sec-views">
+  <h2 class="mb-4 border-bottom pb-2 fw-bold">
+    <i class="bi bi-bar-chart text-primary me-2"></i>Database Views
+  </h2>
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold bg-primary text-white">
+          <i class="bi bi-geo-alt me-2"></i>View 1 — Available Rooms per City
+        </div>
+        <div class="card-body p-0">
+          <div id="viewRoomsPerCity"><div class="p-3 text-muted">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold bg-success text-white">
+          <i class="bi bi-building me-2"></i>View 2 — Total Capacity per Hotel
+        </div>
+        <div class="card-body p-0">
+          <div id="viewCapacityPerHotel"><div class="p-3 text-muted">Loading...</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-4C7hPaQL+gW1GRMUYCvS0/lk+Bk7u5hkop0kQ4SCp1M4T+x+niIf6lMwiwQ9LT+B" crossorigin="anonymous"></script>
-  <script src="scripts/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-4C7hPaQL+gW1GRMUYCvS0/lk+Bk7u5hkop0kQ4SCp1M4T+x+niIf6lMwiwQ9LT+B" crossorigin="anonymous"></script>
+<script src="scripts/main.js"></script>
 </body>
 </html>
