@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 const cors = require('cors');
 const path = require('path');
 const app = express();
-const port = 30000;
+const port = 3000;
 
 // Middleware
 app.use(cors());
@@ -12,11 +12,11 @@ app.use(express.static(path.join(__dirname)));
 
 // PostgreSQL connection
 const pool = new Pool({
-  user: 'your_db_user', // Replace with your PostgreSQL username
   host: 'localhost',
-  database: 'your_db_name', // Should be eHotels, unless you decided to name it differently
-  password: 'your_db_password', // Your DB password. I set it to 'password', but it might be different for you
   port: 5432,
+  database: 'eHotels',    // change to your DB name
+  user: 'postgres',       // change to your DB user
+  password: 'password',   // change to your DB password
 });
 
 // Views
