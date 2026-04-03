@@ -1,85 +1,63 @@
-// Most of the stuff here is ported from my SEG3125 Lab(s)
+// Half of this is straight copy-pasted from my SEG3125 works
+// To view things I've made in SEG3125, check out https://sherman-0477.github.io/
+
 const API = 'http://localhost:3000/api';
-// Date control
+
+// Date helpers. Makes it so you can't choose a past date for search/booking.
 const today = new Date().toISOString().split('T')[0];
 document.getElementById('s_start').min = today;
 document.getElementById('s_end').min = today;
 
-// Navigation control
+// Navigation
 function showSection(sectionId) {
-  document.querySelectorAll('.section').forEach(section => {
-    section.classList.add('d-none');
-  });
-  
-  const targetSection = document.getElementById(sectionId);
-  if (targetSection) {
-    targetSection.classList.remove('d-none');
-  }
+  document.querySelectorAll('.section').forEach(s => s.classList.add('d-none'));
+  const target = document.getElementById(sectionId);
+  if (target) target.classList.remove('d-none');
+  if (sectionId === 'sec-views') loadViews();
+  if (sectionId === 'sec-staff') loadCrudTable();
 }
 
 window.addEventListener('hashchange', () => {
-  const hash = window.location.hash.slice(1); 
-  if (hash) {
-    showSection(hash);
-  }
+  const hash = window.location.hash.slice(1);
+  if (hash) showSection(hash);
 });
 
 window.addEventListener('load', () => {
   const hash = window.location.hash.slice(1);
-  if (hash) {
-    showSection(hash);
-  } else {
-    showSection('sec-search');
-  }
+  showSection(hash || 'sec-search');
+  populateDropdown();
 });
 
-// Toast utility
-function showToast(message, type = 'success') {
-  const toastEl = document.getElementById('appToast');
-  const toastBody = document.getElementById('toastBody');
-  const toastTitle = document.getElementById('toastTitle');
-  toastEl.className = 'toast';
-  toastEl.classList.add(type === 'error' ? 'bg-danger' : type === 'warning' ? 'bg-warning' : 'bg-success');
-  toastEl.classList.add('text-white');
-  toastTitle.textContent = type === 'error' ? 'Error' : type === 'warning' ? 'Warning' : 'Success';
-  toastBody.textContent = message;
-  const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
-  toast.show();
-}
-
-// Dropdown population
-async function populateDropdowns() {
+// Data population for dropdowns
+async function populateDropdown() {
   try {
     const [cities, chains] = await Promise.all([
-      fetch(`${API}/cities`).then(res => res.json()),
-      fetch(`${API}/chains/list`).then(res => res.json()),
+      fetch(`${API}/cities`).then(r => r.json()),
+      fetch(`${API}/chains/list`).then(r => r.json()),
     ]);
     const areaSelect = document.getElementById('s_area');
     cities.forEach(city => {
-      const option = document.createElement('option');
-      option.value = city;
-      option.textContent = city;
-      areaSelect.appendChild(option);
+      const opt = document.createElement('option');
+      opt.value = city;
+      opt.textContent = city;
+      areaSelect.appendChild(opt);
     });
     const chainSelect = document.getElementById('s_chain');
-    chains.forEach(chain => {
-      const option = document.createElement('option');
-      option.value = chain.chainID;
-      option.textContent = chain.chainName;
-      chainSelect.appendChild(option);
+    chains.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.chainID;
+      opt.textContent = c.chainName;
+      chainSelect.appendChild(opt);
     });
-  } catch (error) {
-    console.error('Error fetching dropdown data:', error);
-    showToast('Failed to load dropdown data', 'error');
+  } catch (e) {
+    console.warn('Could not load dropdowns (is the server running?):', e.message);
   }
 }
 
-// Rendering views
+// Views
 async function loadViews() {
-  await Promise.all([
-    loadAvailableRoomsView(),
-    loadCapacityView()
-  ]);
+  loadAvailableRoomsView();
+  loadCapacityView();
 }
 
 async function loadAvailableRoomsView() {
@@ -93,7 +71,7 @@ async function loadAvailableRoomsView() {
         <tbody>
           ${data.map(row => `
             <tr>
-              <td>${row.city || '—'}</td>
+              <td>${row.city || '-'}</td>
               <td class="text-end fw-bold">${row.totalRooms}</td>
             </tr>`).join('')}
         </tbody>
@@ -115,7 +93,7 @@ async function loadCapacityView() {
           ${data.map(row => `
             <tr>
               <td>${row.hotelName || `Hotel #${row.hotelID}`}</td>
-              <td>${row.hotelAddress || '—'}</td>
+              <td>${row.hotelAddress || '-'}</td>
               <td class="text-end fw-bold">${row.totalCapacity ?? 0}</td>
             </tr>`).join('')}
         </tbody>
@@ -125,25 +103,41 @@ async function loadCapacityView() {
   }
 }
 
-// Formatting helpers
+// Bootstrap toasts
+function showToast(message, type = 'success') {
+  const toastEl = document.getElementById('appToast');
+  const toastBody = document.getElementById('toastBody');
+  const toastTitle = document.getElementById('toastTitle');
+  toastEl.className = 'toast';
+  toastEl.classList.add(type === 'error' ? 'bg-danger' : type === 'warning' ? 'bg-warning' : 'bg-success');
+  toastEl.classList.add('text-white');
+  toastTitle.textContent = type === 'error' ? 'Error' : type === 'warning' ? 'Warning' : 'Success';
+  toastBody.textContent = message;
+  const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+  toast.show();
+}
+
+// Format conversions
 function stars(n) {
-  if (!n) return '—';
+  if (!n) return '-';
   return '★'.repeat(n) + '☆'.repeat(5 - n);
 }
+
 function formatMoney(val) {
-  if (val == null) return '—';
-  return `$${val.toFixed(2)}`;}
+  if (val == null) return '-';
+  return '$' + parseFloat(val).toFixed(2);
+}
 
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  const date = new Date(dateStr);
-  return date.toLocaleDateString();}
+function formatDate(d) {
+  if (!d) return '-';
+  return new Date(d).toLocaleDateString();
+}
 
-function clearSearchResults() {
+function clearSearch() {
   ['s_start','s_end','s_capacity','s_area','s_chain','s_category','s_price','s_rooms'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.value = '';
-});
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
   document.getElementById('searchResults').innerHTML = '';
   document.getElementById('searchCount').textContent = '';
 }
