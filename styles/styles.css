@@ -50,3 +50,7 @@ body {
   border-radius: 14px; 
   overflow: hidden; 
 }
+
+#staffTabs .nav-link {
+  color: #1c2e4a !important;
+}
