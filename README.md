@@ -10,8 +10,8 @@ To connect it with your PostgreSQL database, edit these values in server.js. The
 const pool = new Pool({
   host:     'localhost',
   port:     5432,
-  database: 'eHotels',    ← your DB name
-  user:     'postgres',    ← your DB user
-  password: 'password',            ← your DB password
+  database: 'eHotels',    Default DB name. Change it if needed.
+  user:     'postgres',   Default DB user. Change it if needed.
+  password: 'password',   Default DB password. Change it if needed.         
 });
 ```
